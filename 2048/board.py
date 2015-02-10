@@ -38,10 +38,7 @@ class Field(object):
         return not self.get_empty_cells()
 
     def move(self):
-        map(self.ll, self.cells)
-
-    def ll(self, o):
-        print o
+        pass
 
 
 field = Field()
