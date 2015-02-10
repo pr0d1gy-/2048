@@ -36,9 +36,9 @@ class Game(Field):
 
             inp = raw_input('Select: ')
             while inp != '0':
-                self.actions(inp)
-                # self.fillRandomEmptyPoint(int(x) / 2 + 2)
-                self.fillRandomEmptyPoint(1)
+                if inp:
+                    self.actions(inp)
+                    self.fillRandomEmptyPoint(1)
                 self.draw()
                 if self.end:
                     print 'Game is over.'

@@ -4,12 +4,15 @@ import random
 
 class Field(object):
 
+    __score = 0
+    __field = []
     __startDigits = [1, 2]
     __factor = 2
 
     def __init__(self, x = 0, y = 0):
         self.end = 0
         self.__score = 0
+        self.__field = []
 
         self.__sizeX = int(x)
         self.__sizeY = int(y)
@@ -84,6 +87,34 @@ class Field(object):
     def actionRight(self):
         self.moveX(-1)
 
+    def moveX(self, factor):
+        for y in range(len(self.__field)):
+
+            for x in range(len(self.__field[y])):
+                if x == 0:
+                    continue
+
+                if factor < 0:
+                    x += 1
+
+                print x
+
+                if self.__field[y * factor][x] == 0:
+                    continue
+
+                if self.__field[y][(x - 1) * factor] == 0:
+                    self.__field[y][(x - 1) * factor] = self.__field[y][x * factor]
+                    self.__field[y][x * factor] = 0
+
+                    self.moveX(factor)
+
+                if self.__field[y][(x - 1) * factor] == self.__field[y][x * factor]:
+                    self.__field[y][(x - 1) * factor] += self.__field[y][x * factor]
+                    self.__field[y][x * factor] = 0
+                    self.scoreUp(self.__field[y][(x - 1) * factor])
+
+                    self.moveX(factor)
+
     def moveY(self, factor):
         for y in range(len(self.__field)):
             if y == 0:
@@ -105,7 +136,7 @@ class Field(object):
                 if self.__field[y * factor][x] == self.__field[(y - 1) * factor][x]:
                     self.__field[(y - 1) * factor][x] += self.__field[y * factor][x]
                     self.__field[y * factor][x] = 0
-                    self.__score += self.__field[(y - 1) * factor][x]
+                    self.scoreUp(self.__field[(y - 1) * factor][x])
 
                     self.moveY(factor)
 
