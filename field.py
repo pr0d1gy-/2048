@@ -62,9 +62,6 @@ class Field(object):
             for k in keys:
                 self.__field[self.__emptyPoints[k][0]][self.__emptyPoints[k][1]] = self.__factor * random.choice(self.__startDigits)
 
-    def getField(self):
-        return self.__field
-
     def getSizeX(self):
         return self.__sizeX
 
