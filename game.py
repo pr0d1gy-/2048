@@ -38,7 +38,6 @@ class Game(Field):
             while inp != '0':
                 if inp:
                     self.actions(inp)
-                    self.fillRandomEmptyPoint(1)
                 self.draw()
                 if self.end:
                     print 'Game is over.'
@@ -57,3 +56,4 @@ class Game(Field):
         for method in self.acts:
             if action in self.acts[method]:
                 getattr(self, 'action' + method)()
+                self.fillRandomEmptyPoint(1)

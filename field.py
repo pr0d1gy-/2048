@@ -21,13 +21,15 @@ class Field(object):
         self.__createField()
 
     def __checkParams(self):
-        if not self.__sizeX or not self.__sizeY:
+        if self.__sizeX < 1 or self.__sizeY < 1:
             raise AttributeError, 'X and Y arguments must be ( > 0 )'
         if self.__sizeX > 25 or self.__sizeY > 25:
             raise AttributeError, 'X and Y arguments must be ( <= 25 )'
 
     def __createField(self):
         self.__field = [[0 for x in range(self.__sizeX)] for y in range(self.__sizeY)]
+
+        print self.__field
 
     def setEmptyPoints(self):
         self.__emptyPoints = []
@@ -76,18 +78,18 @@ class Field(object):
         self.__score += val
 
     def actionUp(self):
-        self.moveY(1)
+        self.__moveY(1)
 
     def actionDown(self):
-        self.moveY(-1)
+        self.__moveY(-1)
 
     def actionLeft(self):
-        self.moveX(1)
+        self.__moveX(1)
 
     def actionRight(self):
-        self.moveX(-1)
+        self.__moveX(-1)
 
-    def moveX(self, factor):
+    def __moveX(self, factor):
         for y in range(len(self.__field)):
 
             for x in range(len(self.__field[y])):
@@ -97,8 +99,6 @@ class Field(object):
                 if factor < 0:
                     x += 1
 
-                print x
-
                 if self.__field[y][x * factor] == 0:
                     continue
 
@@ -106,16 +106,16 @@ class Field(object):
                     self.__field[y][(x - 1) * factor] = self.__field[y][x * factor]
                     self.__field[y][x * factor] = 0
 
-                    self.moveX(factor)
+                    self.__moveX(factor)
 
                 if self.__field[y][(x - 1) * factor] == self.__field[y][x * factor]:
                     self.__field[y][(x - 1) * factor] += self.__field[y][x * factor]
                     self.__field[y][x * factor] = 0
                     self.scoreUp(self.__field[y][(x - 1) * factor])
 
-                    self.moveX(factor)
+                    self.__moveX(factor)
 
-    def moveY(self, factor):
+    def __moveY(self, factor):
         for y in range(len(self.__field)):
             if y == 0:
                 continue
@@ -131,14 +131,14 @@ class Field(object):
                     self.__field[(y - 1) * factor][x] = self.__field[y * factor][x]
                     self.__field[y * factor][x] = 0
 
-                    self.moveY(factor)
+                    self.__moveY(factor)
 
                 if self.__field[y * factor][x] == self.__field[(y - 1) * factor][x]:
                     self.__field[(y - 1) * factor][x] += self.__field[y * factor][x]
                     self.__field[y * factor][x] = 0
                     self.scoreUp(self.__field[(y - 1) * factor][x])
 
-                    self.moveY(factor)
+                    self.__moveY(factor)
 
     def printField(self):
         for y in self.__field:
