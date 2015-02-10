@@ -41,7 +41,7 @@ class Field(object):
         map(self.ll, self.cells)
 
     def ll(self, o):
-        print (o)
+        print o
 
 
 field = Field()
