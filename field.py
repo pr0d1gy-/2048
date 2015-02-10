@@ -4,11 +4,13 @@ import random
 
 class Field(object):
 
-    __score = 0
     __startDigits = [1, 2]
     __factor = 2
 
     def __init__(self, x = 0, y = 0):
+        self.end = 0
+        self.__score = 0
+
         self.__sizeX = int(x)
         self.__sizeY = int(y)
 
@@ -39,13 +41,21 @@ class Field(object):
 
     def getRandomEmptyPoint(self, count=1):
         self.setEmptyPoints()
-        return random.sample(range(len(self.__emptyPoints)), count)
+
+        if len(self.__emptyPoints) < count:
+            count = len(self.__emptyPoints)
+
+        if self.__emptyPoints:
+            return random.sample(range(len(self.__emptyPoints)), count)
+        else:
+            self.end = 1
+            return 0
 
     def fillRandomEmptyPoint(self, count=1):
         keys = self.getRandomEmptyPoint(count)
-        for k in keys:
-            self.__field[self.__emptyPoints[k][0]][self.__emptyPoints[k][1]] = self.__factor * random.choice(self.__startDigits)
-            del self.__emptyPoints[k]
+        if keys:
+            for k in keys:
+                self.__field[self.__emptyPoints[k][0]][self.__emptyPoints[k][1]] = self.__factor * random.choice(self.__startDigits)
 
     def getField(self):
         return self.__field
@@ -68,54 +78,36 @@ class Field(object):
     def actionDown(self):
         self.moveY(-1)
 
+    def actionLeft(self):
+        self.moveX(1)
+
+    def actionRight(self):
+        self.moveX(-1)
+
     def moveY(self, factor):
-        for y in range(len(self.__field))[::factor]:
-            if (factor > 0 and y == 0) or (factor < 0 and y == len(self.__field) - 1):
+        for y in range(len(self.__field)):
+            if y == 0:
                 continue
 
-            for x in range(len(self.__field[y])):
-                if self.__field[y][x] == 0:
+            if factor < 0:
+                y += 1
+
+            for x in range(len(self.__field)):
+                if self.__field[y * factor][x] == 0:
                     continue
 
-                if self.__field[y - 1][x] == 0:
-                    self.__field[y - 1][x] = self.__field[y][x]
-                    self.__field[y][x] = 0
+                if self.__field[(y - 1) * factor][x] == 0:
+                    self.__field[(y - 1) * factor][x] = self.__field[y * factor][x]
+                    self.__field[y * factor][x] = 0
 
                     self.moveY(factor)
 
-                if self.__field[y - 1][x] == self.__field[y][x]:
-                    self.__field[y - 1][x] += self.__field[y][x]
-                    self.__field[y][x] = 0
-                    self.__score += self.__field[y - 1][x]
+                if self.__field[y * factor][x] == self.__field[(y - 1) * factor][x]:
+                    self.__field[(y - 1) * factor][x] += self.__field[y * factor][x]
+                    self.__field[y * factor][x] = 0
+                    self.__score += self.__field[(y - 1) * factor][x]
 
-
-        # for y in range(len(self.__field))[::factor]:
-        #     if y == 0:
-        #         continue
-        #
-        #     for x in range(len(self.__field)):
-        #         if self.__field[y * factor][x] == 0:
-        #             continue
-        #
-        #         if self.__field[(y - 1) * factor][x] == 0:
-        #             self.__field[(y - 1) * factor][x] = self.__field[y * factor][x]
-        #             self.__field[y * factor][x] = 0
-        #
-        #             self.moveY(factor)
-        #
-        #         if self.__field[y * factor][x] == self.__field[(y - 1) * factor][x]:
-        #             self.__field[(y - 1) * factor][x] += self.__field[y * factor][x]
-        #             self.__field[y * factor][x] = 0
-        #             self.__score += self.__field[(y - 1) * factor][x]
-        #
-        #             self.moveY(factor)
-
-    def actionLeft(self):
-        print 'left'
-        pass
-    def actionRight(self):
-        print 'right'
-        pass
+                    self.moveY(factor)
 
     def printField(self):
         for y in self.__field:
