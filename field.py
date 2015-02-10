@@ -99,7 +99,7 @@ class Field(object):
 
                 print x
 
-                if self.__field[y * factor][x] == 0:
+                if self.__field[y][x * factor] == 0:
                     continue
 
                 if self.__field[y][(x - 1) * factor] == 0:
