@@ -34,6 +34,7 @@ class Field(object):
                 self.set_cell(empty_cells[i][0], empty_cells[i][1], random.choice([2] * 4 + [4]))
 
     def is_filled(self):
+        ''' check filled cells '''
         return len(self.get_empty_cells()) == 0
 
     def move(self):
