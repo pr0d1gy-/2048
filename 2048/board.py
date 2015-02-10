@@ -35,11 +35,16 @@ class Field(object):
 
     def is_filled(self):
         ''' check filled cells '''
-        return len(self.get_empty_cells()) == 0
+        return not self.get_empty_cells()
 
     def move(self):
-        pass
+        map(self.ll, self.cells)
+
+    def ll(self, o):
+        print (o)
 
 
 field = Field()
 print field.cells
+print '\n\n'
+print field.move()
