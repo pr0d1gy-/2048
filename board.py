@@ -47,6 +47,7 @@ class Field(object):
             if new_line:
                 if new_line[-1] == n[i]:
                     new_line[-1] += n[i]
+                    self.__score += new_line[-1]
                 else:
                     new_line.append(n[i])
             else:
@@ -73,10 +74,35 @@ class Field(object):
         return self.__score
 
 
+score = 0;
 field = Field()
 for y in field.cells:
     print y
+
 print '\n\n'
-print field.move(field.DOWN)
+print score
+score += field.move(field.DOWN)
+field.fill_random_cell(2)
+for y in field.cells:
+    print y
+
+print '\n\n'
+print score
+score += field.move(field.UP)
+field.fill_random_cell(2)
+for y in field.cells:
+    print y
+
+print '\n\n'
+print score
+score += field.move(field.LEFT)
+field.fill_random_cell(2)
+for y in field.cells:
+    print y
+
+print '\n\n'
+print score
+score += field.move(field.RIGHT)
+field.fill_random_cell(2)
 for y in field.cells:
     print y
