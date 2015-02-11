@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import random
+import sys
 
 
 class Field(object):
@@ -8,7 +9,7 @@ class Field(object):
     SIZE = 5
 
     def __init__(self, size=SIZE):
-        self.__size = size;
+        self.__size = size
         self.__range_size = xrange(0, self.__size)
         self.cells = [[0] * self.__size for _ in self.__range_size]
         self.fill_random_cell(cell_count=8)
@@ -34,7 +35,7 @@ class Field(object):
         return not self.get_empty_cells()
 
     def turn_cells(self):
-        self.cells = [list(x) for x in zip(*self.cells)]
+        self.cells = [list(x) for x in zip(*map(lambda x: x[::-1 if self.__way == self.UP else 1], self.cells))]
         pass
 
     def move_line(self, line):
@@ -68,23 +69,36 @@ class Field(object):
         self.cells = map(self.move_line, self.cells)
 
         if self.__way in [self.UP, self.DOWN]:
-            self.__way = self.UP if self.__way == self.UP else self.DOWN
+            self.__way = self.DOWN if self.__way == self.UP else self.DOWN
             self.turn_cells()
 
         return self.__score
 
+try:
 
-score = 0;
-field = Field()
-for y in field.cells:
-    print y
-
-for i in xrange(33):
-    print '\n\n'
-    print score
-    way = random.choice(['UP', 'DOWN', 'LEFT', 'RIGHT'])
-    print way
-    score += field.move(getattr(field, way))
-    field.fill_random_cell(2)
+    score = 0
+    moves = 0
+    ways = 'LEFT'
+    field = Field()
     for y in field.cells:
         print y
+
+    for moves in xrange(2000):
+        if not field.is_filled:
+            print 'END\n Your score: '
+            print score
+            break
+
+        ways = random.choice(['UP', 'DOWN', 'LEFT', 'RIGHT'])
+        score += field.move(getattr(field, ways))
+        field.fill_random_cell(1)
+
+    print '\n\n'
+    print 'Moves: ' + str(moves)
+    print 'Score: ' + str(score)
+    print 'Last Way: ' + str(ways)
+    for y in field.cells:
+        print y
+
+except:
+    print sys.exc_info()[1]
