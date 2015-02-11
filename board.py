@@ -46,12 +46,11 @@ class Field(object):
         new_line = []
         for i in n:
             if new_line:
-                new_line[-1] = i * 2 if new_line[-1] == i else new_line.append(i)
-                # if new_line[-1] == i:
-                #     new_line[-1] = i * 2
-                #     self.__score += i * 2
-                # else:
-                #     new_line.append(i)
+                if new_line[-1] == i:
+                    new_line[-1] = i * 2
+                    self.__score += i * 2
+                else:
+                    new_line.append(i)
             else:
                 new_line.append(i)
 
