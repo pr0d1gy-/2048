@@ -24,6 +24,9 @@ class Field(object):
     def set_cell(self, x, y, val):
         self.cells[y][x] = val
 
+    def get_line(self, y):
+        return self.cells[y]
+
     def fill_random_cell(self, cell_count=1):
         empty_cells = self.get_empty_cells()
         if empty_cells:
