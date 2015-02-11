@@ -79,30 +79,12 @@ field = Field()
 for y in field.cells:
     print y
 
-print '\n\n'
-print score
-score += field.move(field.DOWN)
-field.fill_random_cell(2)
-for y in field.cells:
-    print y
-
-print '\n\n'
-print score
-score += field.move(field.UP)
-field.fill_random_cell(2)
-for y in field.cells:
-    print y
-
-print '\n\n'
-print score
-score += field.move(field.LEFT)
-field.fill_random_cell(2)
-for y in field.cells:
-    print y
-
-print '\n\n'
-print score
-score += field.move(field.RIGHT)
-field.fill_random_cell(2)
-for y in field.cells:
-    print y
+for i in xrange(33):
+    print '\n\n'
+    print score
+    way = random.choice(['UP', 'DOWN', 'LEFT', 'RIGHT'])
+    print way
+    score += field.move(getattr(field, way))
+    field.fill_random_cell(2)
+    for y in field.cells:
+        print y
