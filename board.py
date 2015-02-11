@@ -15,7 +15,6 @@ class Field(object):
         self.fill_random_cell(cell_count=8)
         self.__way = 0
         self.__score = 0
-        self.__moved = 0
         self.is_end = 0
 
     def get_empty_cells(self):
@@ -38,7 +37,6 @@ class Field(object):
 
     def turn_cells(self):
         self.cells = [list(x) for x in zip(*map(lambda arr: arr[::-1 if self.__way == self.UP else 1], self.cells))]
-        pass
 
     def move_line(self, line):
         n = [n for n in line if n != 0][::1 if self.__way in [self.LEFT, self.UP] else -1]
@@ -46,18 +44,15 @@ class Field(object):
             return [0] * self.__size
 
         new_line = []
-        for i in xrange(len(n)):
+        for i in n:
             if new_line:
-                if new_line[-1] == n[i]:
-                    new_line[-1] += n[i]
+                if new_line[-1] == i:
+                    new_line[-1] += i
                     self.__score += new_line[-1]
                 else:
-                    new_line.append(n[i])
+                    new_line.append(i)
             else:
-                new_line.append(n[i])
-
-        if new_line != n:
-            self.__moved = 1
+                new_line.append(i)
 
         if self.__way in [self.LEFT, self.UP]:
             return new_line + [0] * (self.__size - len(new_line))
@@ -67,7 +62,6 @@ class Field(object):
     def move(self, way):
         self.__way = way
         self.__score = 0
-        self.__moved = 0
 
         if self.__way in [self.UP, self.DOWN]:
             self.turn_cells()
@@ -77,9 +71,6 @@ class Field(object):
         if self.__way in [self.UP, self.DOWN]:
             self.__way = self.DOWN if self.__way == self.UP else self.DOWN
             self.turn_cells()
-
-        if not self.__score and not self.__moved and self.is_filled():
-            self.is_end = 1
 
         return self.__score
 
