@@ -48,7 +48,7 @@ class Field(object):
             if new_line:
                 if new_line[-1] == i:
                     new_line[-1] += i
-                    self.__score += new_line[-1]
+                    self.__score += i*2
                 else:
                     new_line.append(i)
             else:
