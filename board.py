@@ -44,15 +44,18 @@ class Field(object):
             return [0] * self.__size
 
         new_line = []
+        summed = 0
         for i in n:
-            if new_line:
+            if new_line and not summed:
                 if new_line[-1] == i:
                     new_line[-1] = i * 2
                     self.__score += i * 2
+                    summed = 1
                 else:
                     new_line.append(i)
             else:
                 new_line.append(i)
+                summed = 0
 
         if self.__way in [self.LEFT, self.UP]:
             return new_line + [0] * (self.__size - len(new_line))
