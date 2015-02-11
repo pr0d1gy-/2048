@@ -11,13 +11,4 @@ for i in n:
         new_line.append(i)
 
 print new_line
-
-# for i in xrange(len(n)):
-#     if new_line:
-#         if new_line[-1] == n[i]:
-#             new_line[-1] += n[i]
-#             self.__score += new_line[-1]
-#         else:
-#             new_line.append(n[i])
-#     else:
-#         new_line.append(n[i])
+)
