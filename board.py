@@ -15,7 +15,6 @@ class Field(object):
         self.fill_random_cell(cell_count=8)
         self.__way = 0
         self.__score = 0
-        self.is_end = 0
 
     def get_empty_cells(self):
         return [(x, y) for x in self.__range_size for y in self.__range_size if self.get_cell(x, y) == 0]
@@ -77,6 +76,19 @@ class Field(object):
 
         return self.__score
 
+    def is_move_exist(self):
+        if not self.is_filled():
+            return True
+
+        for y in self.__range_size:
+            for x in self.__range_size:
+                c = self.get_cell(x, y)
+                if (x < self.__size - 1 and c == self.get_cell(x + 1, y)) \
+                        or (y < self.__size - 1 and c == self.get_cell(x, y + 1)):
+                    return True
+
+        return False
+
 # END CLASS
 
 
@@ -90,7 +102,7 @@ try:
         print y
 
     for moves in xrange(2000):
-        if field.is_end:
+        if not field.is_move_exist():
             break
 
         ways = random.choice(['UP', 'DOWN', 'LEFT', 'RIGHT'])
