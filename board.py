@@ -15,6 +15,8 @@ class Field(object):
         self.fill_random_cell(cell_count=8)
         self.__way = 0
         self.__score = 0
+        self.__moved = 0
+        self.is_end = 0
 
     def get_empty_cells(self):
         return [(x, y) for x in self.__range_size for y in self.__range_size if self.get_cell(x, y) == 0]
@@ -54,6 +56,9 @@ class Field(object):
             else:
                 new_line.append(n[i])
 
+        if new_line != n:
+            self.__moved = 1
+
         if self.__way in [self.LEFT, self.UP]:
             return new_line + [0] * (self.__size - len(new_line))
 
@@ -62,6 +67,7 @@ class Field(object):
     def move(self, way):
         self.__way = way
         self.__score = 0
+        self.__moved = 0
 
         if self.__way in [self.UP, self.DOWN]:
             self.turn_cells()
@@ -71,6 +77,9 @@ class Field(object):
         if self.__way in [self.UP, self.DOWN]:
             self.__way = self.DOWN if self.__way == self.UP else self.DOWN
             self.turn_cells()
+
+        if not self.__score and not self.__moved and self.is_filled():
+            self.is_end = 1
 
         return self.__score
 
@@ -87,9 +96,7 @@ try:
         print y
 
     for moves in xrange(2000):
-        if not field.is_filled:
-            print 'END\n Your score: '
-            print score
+        if field.is_end:
             break
 
         ways = random.choice(['UP', 'DOWN', 'LEFT', 'RIGHT'])
