@@ -74,6 +74,9 @@ class Field(object):
 
         return self.__score
 
+# END CLASS
+
+
 try:
 
     score = 0
