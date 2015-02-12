@@ -46,8 +46,11 @@ class Game(object):
                     break
                 elif keypress.char in moves.keys():
                     self.score += self.field.move(moves[keypress.char])
-                    self.moves += 1
-                    self.field.fill_random_cell(1)
+
+                    if not self.field.not_moved:
+                        self.field.fill_random_cell(1)
+                        self.moves += 1
+
                     self.print_game()
                     keypress.char = None
                 else:

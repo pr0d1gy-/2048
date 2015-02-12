@@ -14,6 +14,7 @@ class Field(object):
         self.fill_random_cell(cell_count=self.__size / 2)
         self.__way = 0
         self.__score = 0
+        self.not_moved = 1
 
     def get_size(self):
         return self.__size
@@ -63,13 +64,19 @@ class Field(object):
                 new_line.append(i)
 
         if self.__way in [self.LEFT, self.UP]:
-            return new_line + [0] * (self.__size - len(new_line))
+            new_line = new_line + [0] * (self.__size - len(new_line))
+        else:
+            new_line = [0] * (self.__size - len(new_line)) + new_line[::-1]
 
-        return [0] * (self.__size - len(new_line)) + new_line[::-1]
+        if new_line != line:
+            self.not_moved = 0
+
+        return new_line
 
     def move(self, way):
         self.__way = way
         self.__score = 0
+        self.not_moved = 1
 
         if self.__way in [self.UP, self.DOWN]:
             self.turn_cells()
