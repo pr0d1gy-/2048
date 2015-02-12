@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 import os
 import sys
 import keypress
@@ -74,10 +73,6 @@ class Game(object):
 
     def print_sep(self):
         print '-' * (self.field.get_size() * 7)
-
-    def print_rules(self):
-        self.print_sep()
-        print 'Exit     -   q'
 
     def print_score(self):
         self.print_sep()
