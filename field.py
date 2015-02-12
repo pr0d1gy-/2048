@@ -11,9 +11,12 @@ class Field(object):
         self.__size = size
         self.__range_size = xrange(0, self.__size)
         self.cells = [[0] * self.__size for _ in self.__range_size]
-        self.fill_random_cell(cell_count=8)
+        self.fill_random_cell(cell_count=self.__size / 2)
         self.__way = 0
         self.__score = 0
+
+    def get_size(self):
+        return self.__size
 
     def get_empty_cells(self):
         return [(x, y) for x in self.__range_size for y in self.__range_size if self.get_cell(x, y) == 0]
@@ -37,7 +40,8 @@ class Field(object):
         return not self.get_empty_cells()
 
     def turn_cells(self):
-        self.cells = [list(x) for x in zip(*map(lambda arr: arr[::-1 if self.__way == self.UP else 1], self.cells))]
+        # map(lambda arr: arr[::-1 if self.__way == self.UP else 1], self.cells)
+        self.cells = [list(x) for x in zip(*self.cells)]
 
     def move_line(self, line):
         n = [n for n in line if n != 0][::1 if self.__way in [self.LEFT, self.UP] else -1]

@@ -1,21 +1,21 @@
 # -*- coding: UTF-8 -*-
+import os
 import sys
-import random
 from field import Field
 
 
 class Game(object):
-
     field = None
     score = 0
     moves = 0
+    error = ''
 
     COLOR_DIGITS = {
-        0: '0',
-        2: '2',
-        4: '4',
-        8: '8',
-        16: '\033[1;38m16\033[1;m',
+        0: '\033[1;33m0\033[1;m',
+        2: '\033[1;34m2\033[1;m',
+        4: '\033[1;35m4\033[1;m',
+        8: '\033[1;37m8\033[1;m',
+        16: '\033[1;36m16\033[1;m',
         32: '\033[1;38m32\033[1;m',
         64: '\033[1;37m64\033[1;m',
         128: '\033[1;35m128\033[1;m',
@@ -28,39 +28,88 @@ class Game(object):
     }
 
     def __init__(self):
-        self.field = Field(5)
-        self.print_field()
+        self.field = Field(self.input_size())
+        self.play()
+
+    def print_error(self):
+        if self.error:
+            self.print_sep()
+            print self.error
+            self.error = ''
+
+    def play(self):
+        while True:
+            self.clear_console()
+            self.print_score()
+            self.print_field()
+            self.print_rules()
+            self.print_error()
+
+            if not self.field.is_move_exist():
+                break
+
+            self.print_sep()
+
+            try:
+                way = int(raw_input('Enter way: '))
+                if way < 0 or way > 4:
+                    raise AttributeError, 'Wrong way.'
+            except:
+                self.error = 'Wrong way!'
+                continue
+
+            if way == 0:
+                break
+
+            self.score += self.field.move(way)
+            self.moves += 1
+            self.field.fill_random_cell(1)
+
+    def print_sep(self):
+        print '-' * (self.field.get_size() * 7)
+
+    def print_rules(self):
+        self.print_sep()
+        print 'Up       -   1'
+        print 'Down     -   2'
+        print 'Left     -   3'
+        print 'Right    -   4'
+        print 'Exit     -   0'
+
+    def print_score(self):
+        self.print_sep()
+        print 'Score: %s | Moves: %s' % (self.score, self.moves)
+
+    def input_size(self):
+        size = raw_input('Enter size of field, 5?: ')
+        if not size:
+            size = 5
+        else:
+            size = int(size)
+
+        if 0 > size or size > 25:
+            raise AttributeError, 'Size of field must be 0..25'
+
+        return size
+
+    def clear_console(self):
+        os.system('clear')
 
     def print_field(self):
+        self.print_sep()
         for y in xrange(len(self.field.cells)):
-            print ', '.join(self.COLOR_DIGITS[x * 512] for x in self.field.get_line(y))
+            print ' ' * 5 + ''.join(
+                ['{0:{width}}'.format(self.COLOR_DIGITS[x], width=18) for x in self.field.get_line(y)])
 
 
-game = Game()
+try:
 
-# try:
-#
-#     score = 0
-#     moves = 0
-#     ways = 'LEFT'
-#     field = Field()
-#     for y in field.cells:
-#         print y
-#
-#     for moves in xrange(2000):
-#         if not field.is_move_exist():
-#             break
-#
-#         ways = random.choice(['UP', 'DOWN', 'LEFT', 'RIGHT'])
-#         score += field.move(getattr(field, ways))
-#         field.fill_random_cell(1)
-#
-#     print '\n\n'
-#     print 'Moves: ' + str(moves)
-#     print 'Score: ' + str(score)
-#     print 'Last Way: ' + str(ways)
-#     for y in field.cells:
-#         print y
-#
-# except:
-#     print sys.exc_info()[1]
+    try_more = 1
+    while try_more:
+        game = Game()
+        del game
+        try_more = raw_input('Another try? (y) ')
+        try_more = 0 if try_more in ['0', 'n', 'N'] else 1
+
+except:
+    print sys.exc_info()[1]
