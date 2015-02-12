@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import os
 import sys
+import keypress
 import thread
 from field import Field
 
@@ -10,6 +11,7 @@ class Game(object):
     score = 0
     moves = 0
     error = ''
+    end = 0
 
     COLOR_DIGITS = {
         0: '\033[1;33m0\033[1;m',
@@ -32,49 +34,50 @@ class Game(object):
         self.field = Field(self.input_size())
         self.play()
 
+    def play(self):
+        self.print_game()
+
+        thread.start_new_thread(keypress.keypress, ())
+
+        moves = {'w': 1, 's': 2, 'a': 3, 'd': 4}
+
+        while True:
+            if keypress.char:
+                if keypress.char == 'q':
+                    break
+                elif keypress.char in moves.keys():
+                    self.score += self.field.move(moves[keypress.char])
+                    self.moves += 1
+                    self.field.fill_random_cell(1)
+                    self.print_game()
+                    keypress.char = None
+                else:
+                    print keypress.char
+                    keypress.char = None
+
     def print_error(self):
         if self.error:
             self.print_sep()
             print self.error
             self.error = ''
 
-    def play(self):
-        while True:
-            self.clear_console()
-            self.print_score()
-            self.print_field()
-            self.print_error()
+    def print_game(self):
+        self.clear_console()
+        self.print_score()
+        self.print_field()
+        self.print_error()
 
-            if not self.field.is_move_exist():
-                break
+        if not self.field.is_move_exist():
+            exit()
 
-            self.print_sep()
-
-            try:
-                way = int(raw_input('Enter way: '))
-                if way < 0 or way > 4:
-                    raise AttributeError, 'Wrong way.'
-            except:
-                self.error = 'Wrong way!'
-                continue
-
-            if way == 0:
-                break
-
-            self.score += self.field.move(way)
-            self.moves += 1
-            self.field.fill_random_cell(1)
+        self.print_sep()
 
     def print_sep(self):
         print '-' * (self.field.get_size() * 7)
 
     def print_rules(self):
         self.print_sep()
-        print 'Up       -   1'
-        print 'Down     -   2'
-        print 'Left     -   3'
-        print 'Right    -   4'
-        print 'Exit     -   0'
+        print 'Exit     -   q'
 
     def print_score(self):
         self.print_sep()
@@ -106,12 +109,7 @@ class Game(object):
 
 try:
 
-    try_more = 1
-    while try_more:
-        game = Game()
-        del game
-        try_more = raw_input('Another try? (y) ')
-        try_more = 0 if try_more in ['0', 'n', 'N'] else 1
+    game = Game()
 
 except:
     print sys.exc_info()[1]
