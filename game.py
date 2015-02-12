@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import os
 import sys
+import thread
 from field import Field
 
 
@@ -42,7 +43,6 @@ class Game(object):
             self.clear_console()
             self.print_score()
             self.print_field()
-            self.print_rules()
             self.print_error()
 
             if not self.field.is_move_exist():
@@ -80,7 +80,8 @@ class Game(object):
         self.print_sep()
         print 'Score: %s | Moves: %s' % (self.score, self.moves)
 
-    def input_size(self):
+    @staticmethod
+    def input_size():
         size = raw_input('Enter size of field, 5?: ')
         if not size:
             size = 5
@@ -92,7 +93,8 @@ class Game(object):
 
         return size
 
-    def clear_console(self):
+    @staticmethod
+    def clear_console():
         os.system('clear')
 
     def print_field(self):
