@@ -70,6 +70,11 @@ class Game(object):
         self.print_error()
 
         if not self.field.is_move_exist():
+            print 'You lose.'
+            exit()
+
+        if self.field.is_won_game():
+            print 'You won.'
             exit()
 
         self.print_sep()

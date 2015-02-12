@@ -4,6 +4,7 @@ import random
 
 class Field(object):
 
+    MAX_CELL = 8196
     UP, DOWN, LEFT, RIGHT = 1, 2, 3, 4
     SIZE = 5
 
@@ -98,6 +99,14 @@ class Field(object):
                 c = self.get_cell(x, y)
                 if (x < self.__size - 1 and c == self.get_cell(x + 1, y)) \
                         or (y < self.__size - 1 and c == self.get_cell(x, y + 1)):
+                    return True
+
+        return False
+
+    def is_won_game(self):
+        for y in self.__range_size:
+            for x in self.__range_size:
+                if self.get_cell(x, y) == self.MAX_CELL:
                     return True
 
         return False
