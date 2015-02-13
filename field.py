@@ -49,7 +49,6 @@ class Field(object):
         return not self.get_empty_cells()
 
     def turn_cells(self):
-        # map(lambda arr: arr[::-1 if self.__way == self.UP else 1], self.cells)
         self.cells = [list(x) for x in zip(*self.cells)]
 
     def move_line(self, line):
