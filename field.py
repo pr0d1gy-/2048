@@ -8,10 +8,14 @@ class Field(object):
     UP, DOWN, LEFT, RIGHT = 1, 2, 3, 4
     SIZE = 5
 
+    cells = []
+
+    __size = 0
+    __range_size = 0
+
     def __init__(self, size=SIZE):
-        self.__size = size
-        self.__range_size = xrange(0, self.__size)
-        self.cells = [[0] * self.__size for _ in self.__range_size]
+        self.set_size(size)
+        self.create_empty_field()
         self.fill_random_cell(cell_count=self.__size / 2)
         self.__way = 0
         self.__score = 0
@@ -20,8 +24,21 @@ class Field(object):
     def get_size(self):
         return self.__size
 
+    def get_size_range(self):
+        return self.__range_size
+
+    def set_size(self, size):
+        self.__size = size
+        self.__range_size = xrange(0, self.__size)
+
+    def create_empty_field(self):
+        self.cells = [[0] * self.__size for _ in self.__range_size]
+
     def get_empty_cells(self):
         return [(x, y) for x in self.__range_size for y in self.__range_size if self.get_cell(x, y) == 0]
+
+    def clear_cells(self):
+        self.cells = []
 
     def get_cell(self, x, y):
         return self.cells[y][x]
@@ -31,6 +48,9 @@ class Field(object):
 
     def get_line(self, y):
         return self.cells[y]
+
+    def set_line(self, y, v):
+        self.cells[y] = v
 
     def fill_random_cell(self, cell_count=1):
         empty_cells = self.get_empty_cells()
@@ -112,7 +132,7 @@ class Field(object):
     def is_won_game(self):
         for y in self.__range_size:
             for x in self.__range_size:
-                if self.get_cell(x, y) == self.MAX_CELL:
+                if self.get_cell(x, y) >= self.MAX_CELL:
                     return True
 
         return False

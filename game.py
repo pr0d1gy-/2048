@@ -6,10 +6,11 @@ from field import Field
 
 
 class Game(object):
+    path = os.path.dirname(os.path.abspath(__file__))
     field = None
     score = 0
     moves = 0
-    error = ''
+    message = ''
     end = 0
 
     COLOR_DIGITS = {
@@ -38,7 +39,7 @@ class Game(object):
 
         thread.start_new_thread(keypress.keypress, ())
         moves_ord = {65: 1, 66: 2, 68: 3, 67: 4}
-        while True:
+        while not self.end:
             try:
                 if keypress.char:
                     key_code = ord(keypress.char)
@@ -50,33 +51,93 @@ class Game(object):
                             self.field.fill_random_cell(self.field.get_size() / 2)
                             self.moves += 1
                     elif key_code == 27:
-                        break
+                        self.end = 1
+                    elif key_code == 115:
+                        self.save()
+                    elif key_code == 108:
+                        self.load()
 
                     self.print_game()
             except:
-                self.error = sys.exc_info()[1]
+                self.message = sys.exc_info()[1]
 
-        exit('Game is over. You exited.')
+        print 'Game is over. You exited.'
 
-    def print_error(self):
-        if self.error:
+    def save(self):
+        print 'saving...'
+        try:
+            f = open(self.path + '/game.save', 'w')
+
+            raw = str(self.field.get_size()) \
+                + '\n' + str(self.score) \
+                + '\n' + str(self.moves) \
+                + '\n'
+
+            for y in self.field.get_size_range():
+                raw += ','.join(['%s' % i for i in self.field.get_line(y)])
+                raw += '\n'
+
+            f.write(raw)
+            self.message = 'Saved!'
+        except:
+            self.message = sys.exc_info()[1]
+        finally:
+            f.close()
+
+    def load(self):
+        print 'loading...'
+        try:
+            f = open(self.path + '/game.save', 'r')
+            lines = f.readlines()
+
+            size = int(lines[0])
+            if size != len(lines) - 3:
+                raise Exception, 'Invalid save.'
+
+            self.field.clear_cells()
+            self.field.set_size(size)
+            self.field.create_empty_field()
+            self.score = int(lines[1])
+            self.moves = int(lines[2])
+
+            for i in xrange(3, len(lines)):
+                self.field.set_line(i - 3, [int(j) for j in lines[i].replace('\n', '').split(',')])
+
+            self.message = 'Loaded.'
+        except:
+            self.message = sys.exc_info()[1]
+        finally:
+            f.close()
+
+    def print_message(self):
+        if self.message:
             self.print_sep()
-            print self.error
-            self.error = ''
+            print self.message
+            self.message = ''
 
     def print_game(self):
         self.clear_console()
         self.print_score()
         self.print_field()
-        self.print_error()
+        self.print_message()
 
         if not self.field.is_move_exist():
-            exit('You lose.')
+            self.end = 1
+            print 'You lose.'
 
         if self.field.is_won_game():
-            exit('You won.')
+            self.end = 1
+            print 'You won.'
 
+        self.print_rules()
         self.print_sep()
+
+    def print_rules(self):
+        self.print_sep()
+        print 'Move - ARROWS' \
+            + '\nExit - ESC' \
+            + '\nSave - S' \
+            + '\nLoad - L'
 
     def print_sep(self):
         print '-' * (self.field.get_size() * 7)
