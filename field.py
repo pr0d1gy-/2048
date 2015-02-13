@@ -35,7 +35,14 @@ class Field(object):
     def fill_random_cell(self, cell_count=1):
         empty_cells = self.get_empty_cells()
         if empty_cells:
-            for i in random.sample(xrange(len(empty_cells)), cell_count):
+            len_empty_cells = len(empty_cells)
+            if len_empty_cells < cell_count:
+                cell_count = len_empty_cells
+            elif len_empty_cells == 1:
+                self.set_cell(empty_cells[0][0], empty_cells[0][1], random.choice([2] * 4 + [4]))
+                return True
+
+            for i in random.sample(xrange(len_empty_cells), cell_count):
                 self.set_cell(empty_cells[i][0], empty_cells[i][1], random.choice([2] * 4 + [4]))
 
     def is_filled(self):

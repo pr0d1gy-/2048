@@ -37,25 +37,26 @@ class Game(object):
         self.print_game()
 
         thread.start_new_thread(keypress.keypress, ())
-
-        moves = {'w': 1, 's': 2, 'a': 3, 'd': 4}
-
+        moves_ord = {65: 1, 66: 2, 68: 3, 67: 4}
         while True:
-            if keypress.char:
-                if keypress.char == 'q':
-                    break
-                elif keypress.char in moves.keys():
-                    self.score += self.field.move(moves[keypress.char])
+            try:
+                if keypress.char:
+                    key_code = ord(keypress.char)
+                    keypress.char = None
 
-                    if not self.field.not_moved:
-                        self.field.fill_random_cell(1)
-                        self.moves += 1
+                    if key_code in moves_ord.keys():
+                        self.score += self.field.move(moves_ord[key_code])
+                        if not self.field.not_moved:
+                            self.field.fill_random_cell(self.field.get_size() / 2)
+                            self.moves += 1
+                    elif key_code == 27:
+                        break
 
                     self.print_game()
-                    keypress.char = None
-                else:
-                    print keypress.char
-                    keypress.char = None
+            except:
+                self.error = sys.exc_info()[1]
+
+        exit('Game is over. You exited.')
 
     def print_error(self):
         if self.error:
@@ -70,12 +71,10 @@ class Game(object):
         self.print_error()
 
         if not self.field.is_move_exist():
-            print 'You lose.'
-            exit()
+            exit('You lose.')
 
         if self.field.is_won_game():
-            print 'You won.'
-            exit()
+            exit('You won.')
 
         self.print_sep()
 
