@@ -3,13 +3,16 @@ try:
 except ImportError:
     def getch():
         import sys, tty, termios
+
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
+
         try:
-            tty.setcbreak(sys.stdin.fileno())
+            tty.setcbreak(fd)
             ch = sys.stdin.read(1)
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
         return ch
 
 char = None
