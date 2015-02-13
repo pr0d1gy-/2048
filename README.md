@@ -1,2 +1,4 @@
-w-a-s-d - controls
-q - exit
+Moves - ARROWS
+Exit - ESC
+Save - S
+Load - L
