@@ -9,15 +9,15 @@ class FieldTest(TestCase):
         self.field = Field(3)
 
     def test1_field_size(self):
-        self.assertTrue(len(self.field.cells) == 3
-                        and False not in [3 == len(i) for i in self.field.cells]
-                        , 'Field size is not true.')
+        self.assertTrue(len(self.field.cells) == 3 and False not in [3 == len(i) for i in self.field.cells],
+                        'Field size is not true.')
+
         print 'Field Size - True'
 
     def test2_empty_cell(self):
         self.field.create_empty_field()
-        self.assertTrue(len(self.field.get_empty_cells()) == 9
-                        , 'Get empty cell returned false result.')
+        self.assertTrue(len(self.field.get_empty_cells()) == 9,
+                        'Get empty cell returned false result.')
         self.field.cells = [[2] * 3] * 3
         self.assertTrue(len(self.field.get_empty_cells()) == 0)
 
@@ -72,32 +72,32 @@ class FieldTest(TestCase):
         result_score = 12
 
         ''' move left '''
-        self.assertTrue(self.field.move(3) == result_score and self.field.cells == result_lines
-                        , 'Move left is wrong')
+        self.assertTrue(self.field.move(3) == result_score and self.field.cells == result_lines,
+                        'Move left is wrong')
 
         self.field.cells = [[2, 2, 4], [0, 2, 0], [4, 4, 4]]
         result_lines = [[0, 4, 4], [0, 0, 2], [0, 4, 8]]
         result_score = 12
 
         ''' move right '''
-        self.assertTrue(self.field.move(4) == result_score and self.field.cells == result_lines
-                        , 'Move right is wrong')
+        self.assertTrue(self.field.move(4) == result_score and self.field.cells == result_lines,
+                        'Move right is wrong')
 
         self.field.cells = [[2, 2, 4], [2, 0, 4], [4, 0, 4]]
         result_lines = [[4, 2, 8], [4, 0, 4], [0, 0, 0]]
         result_score = 12
 
         ''' move up '''
-        self.assertTrue(self.field.move(1) == result_score and self.field.cells == result_lines
-                        , 'Move up is wrong')
+        self.assertTrue(self.field.move(1) == result_score and self.field.cells == result_lines,
+                        'Move up is wrong')
 
         self.field.cells = [[2, 2, 4], [0, 0, 0], [4, 0, 4]]
         result_lines = [[0, 0, 0], [2, 0, 0], [4, 2, 8]]
         result_score = 8
 
         ''' move down '''
-        self.assertTrue(self.field.move(2) == result_score and self.field.cells == result_lines
-                        , 'Move down is wrong')
+        self.assertTrue(self.field.move(2) == result_score and self.field.cells == result_lines,
+                        'Move down is wrong')
 
         print 'Move - True'
 
