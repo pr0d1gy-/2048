@@ -107,7 +107,7 @@ class FieldTest(TestCase):
         self.field.cells = [[2, 2, 4], [2, 2, 2], [4, 2, 4]]
         self.assertTrue(self.field.is_filled())
 
-        print 'IsFilled = True'
+        print 'Is Filled = True'
 
     def test7_can_move(self):
         # can't move
