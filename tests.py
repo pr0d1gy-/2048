@@ -148,6 +148,39 @@ class FieldTest(TestCase):
 
         print 'Won game - True'
 
+    def test9_get_size(self):
+        self.assertTrue(self.field.get_size() == 3,
+                        'Get size returned wrong result.')
+
+        print 'Get Size - True'
+
+    def test10_get_size_range(self):
+        self.assertTrue(len([i for i in self.field.get_size_range()]) == 3,
+                        'Get Size Range returned wrong result.')
+
+        print 'Get Size Range - True'
+
+    def test11_clear_cells(self):
+        self.field.cells = [[2] * 3] * 3
+        self.field.clear_cells()
+        self.assertTrue(not self.field.cells,
+                        'Clear cells do not work.')
+
+        print 'Clear Cells - True'
+
+    def test12_get_line(self):
+        line = self.field.get_line(0)
+        self.assertTrue(line and isinstance(line, list),
+                        'Get line do not work.')
+
+        with self.assertRaises(AttributeError):
+            self.field.get_line(-4)
+
+        with self.assertRaises(AttributeError):
+            self.field.get_line(3)
+
+        print 'Get Line - True'
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -77,7 +77,7 @@ class Field(object):
                 cell_count = len_empty_cells
             elif len_empty_cells == 1:
                 self.set_cell(empty_cells[0][0], empty_cells[0][1], random.choice([2] * 4 + [4]))
-                return
+                return None
 
             for i in random.sample(xrange(len_empty_cells), cell_count):
                 self.set_cell(empty_cells[i][0], empty_cells[i][1], random.choice([2] * 4 + [4]))
@@ -133,9 +133,6 @@ class Field(object):
         return self.__score
 
     def is_move_exist(self):
-        if not self.is_filled():
-            return True
-
         for y in self.__range_size:
             for x in self.__range_size:
                 c = self.get_cell(x, y)

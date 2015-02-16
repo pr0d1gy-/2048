@@ -121,7 +121,7 @@ class Game(object):
         self.print_field()
         self.print_message()
 
-        if not self.field.is_move_exist():
+        if self.field.is_filled() and not self.field.is_move_exist():
             self.end = 1
             print 'You lose.'
 
