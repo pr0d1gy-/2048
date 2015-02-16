@@ -46,26 +46,26 @@ class Field(object):
 
     def set_cell(self, x, y, val):
         if not isinstance(val, int) or val not in self.VALID_VALUES:
-            raise AttributeError, 'Invalid value.'
+            raise (AttributeError, 'Invalid value.')
 
         if y > self.__size - 1 or y * -1 > self.__size or x > self.__size - 1 or x * -1 > self.__size:
-            raise AttributeError, 'Invalid field sizes.'
+            raise (AttributeError, 'Invalid field sizes.')
 
         self.cells[y][x] = val
 
     def get_line(self, y):
         if y > self.__size - 1 or y * -1 > self.__size:
-            raise AttributeError, 'Size of field are less than this value.'
+            raise (AttributeError, 'Size of field are less than this value.')
 
         return self.cells[y]
 
     def set_line(self, y, v):
         if y > self.__size - 1 or y * -1 > self.__size or len(v) != self.__size:
-            raise AttributeError, 'Line is invalid or error in size of field.'
+            raise (AttributeError, 'Line is invalid or error in size of field.')
 
         for i in v:
             if not isinstance(i, int) or i not in self.VALID_VALUES:
-                raise AttributeError, 'Invalid value in line.'
+                raise (AttributeError, 'Invalid value in line.')
 
         self.cells[y] = v
 
@@ -128,7 +128,6 @@ class Field(object):
         self.cells = map(self.move_line, self.cells)
 
         if self.__way in [self.UP, self.DOWN]:
-            self.__way = self.DOWN if self.__way == self.UP else self.DOWN
             self.turn_cells()
 
         return self.__score

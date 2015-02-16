@@ -112,39 +112,39 @@ class FieldTest(TestCase):
     def test7_can_move(self):
         # can't move
         self.field.cells = [[2, 4, 8], [4, 8, 2], [16, 32, 64]]
-        self.assertFalse(self.field.is_move_exist()
-                        , 'Can move function return false result.')
+        self.assertFalse(self.field.is_move_exist(),
+                         'Can move function return false result.')
 
         # left
         self.field.cells = [[4, 4, 8], [4, 8, 2], [16, 32, 64]]
-        self.assertTrue(self.field.is_move_exist()
-                        , 'Can move function return false result.')
+        self.assertTrue(self.field.is_move_exist(),
+                        'Can move function return false result.')
 
         # right
         self.field.cells = [[2, 4, 4], [4, 8, 2], [16, 32, 64]]
-        self.assertTrue(self.field.is_move_exist()
-                        , 'Can move function return false result.')
+        self.assertTrue(self.field.is_move_exist(),
+                        'Can move function return false result.')
 
         # down
         self.field.cells = [[2, 4, 8], [4, 32, 2], [16, 32, 64]]
-        self.assertTrue(self.field.is_move_exist()
-                        , 'Can move function return false result.')
+        self.assertTrue(self.field.is_move_exist(),
+                        'Can move function return false result.')
 
         # up
         self.field.cells = [[2, 4, 8], [2, 8, 2], [16, 32, 64]]
-        self.assertTrue(self.field.is_move_exist()
-                        , 'Can move function return false result.')
+        self.assertTrue(self.field.is_move_exist(),
+                        'Can move function return false result.')
 
         print 'Can move - True'
 
     def test8_won_game(self):
         self.field.cells = [[2, 4, 8], [2, 8, 2], [16, 32, 64]]
-        self.assertFalse(self.field.is_won_game()
-                         , '"is_won_game" function work is not true.')
+        self.assertFalse(self.field.is_won_game(),
+                         '"is_won_game" function work is not true.')
 
         self.field.cells[2][2] = 8196
-        self.assertTrue(self.field.is_won_game()
-                         , '"is_won_game" function work is not true.')
+        self.assertTrue(self.field.is_won_game(),
+                        '"is_won_game" function work is not true.')
 
         print 'Won game - True'
 
