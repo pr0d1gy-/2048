@@ -7,6 +7,7 @@ class Field(object):
     MAX_CELL = 8196
     UP, DOWN, LEFT, RIGHT = 1, 2, 3, 4
     SIZE = 5
+    VALID_VALUES = [0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2058, 4096, 8196]
 
     cells = []
 
@@ -44,12 +45,28 @@ class Field(object):
         return self.cells[y][x]
 
     def set_cell(self, x, y, val):
+        if not isinstance(val, int) or val not in self.VALID_VALUES:
+            raise AttributeError, 'Invalid value.'
+
+        if y > self.__size - 1 or y * -1 > self.__size or x > self.__size - 1 or x * -1 > self.__size:
+            raise AttributeError, 'Invalid field sizes.'
+
         self.cells[y][x] = val
 
     def get_line(self, y):
+        if y > self.__size - 1 or y * -1 > self.__size:
+            raise AttributeError, 'Size of field are less than this value.'
+
         return self.cells[y]
 
     def set_line(self, y, v):
+        if y > self.__size - 1 or y * -1 > self.__size or len(v) != self.__size:
+            raise AttributeError, 'Line is invalid or error in size of field.'
+
+        for i in v:
+            if not isinstance(i, int) or i not in self.VALID_VALUES:
+                raise AttributeError, 'Invalid value in line.'
+
         self.cells[y] = v
 
     def fill_random_cell(self, cell_count=1):
@@ -60,7 +77,7 @@ class Field(object):
                 cell_count = len_empty_cells
             elif len_empty_cells == 1:
                 self.set_cell(empty_cells[0][0], empty_cells[0][1], random.choice([2] * 4 + [4]))
-                return True
+                return
 
             for i in random.sample(xrange(len_empty_cells), cell_count):
                 self.set_cell(empty_cells[i][0], empty_cells[i][1], random.choice([2] * 4 + [4]))
