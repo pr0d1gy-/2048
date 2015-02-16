@@ -29,6 +29,12 @@ class Field(object):
         return self.__range_size
 
     def set_size(self, size):
+        if not isinstance(size, int):
+            raise (AttributeError, 'Wrong format of size.')
+
+        if 0 > size or size > 20:
+            raise (AttributeError, 'Size may be in range 0..20')
+
         self.__size = size
         self.__range_size = xrange(0, self.__size)
 
@@ -54,7 +60,7 @@ class Field(object):
         self.cells[y][x] = val
 
     def get_line(self, y):
-        if y > self.__size - 1 or y * -1 > self.__size:
+        if not isinstance(y, int) or y > self.__size - 1 or y * -1 > self.__size:
             raise (AttributeError, 'Size of field are less than this value.')
 
         return self.cells[y]
@@ -75,12 +81,13 @@ class Field(object):
             len_empty_cells = len(empty_cells)
             if len_empty_cells < cell_count:
                 cell_count = len_empty_cells
-            elif len_empty_cells == 1:
-                self.set_cell(empty_cells[0][0], empty_cells[0][1], random.choice([2] * 4 + [4]))
-                return None
 
             for i in random.sample(xrange(len_empty_cells), cell_count):
                 self.set_cell(empty_cells[i][0], empty_cells[i][1], random.choice([2] * 4 + [4]))
+
+            return cell_count
+
+        return 0
 
     def is_filled(self):
         return not self.get_empty_cells()

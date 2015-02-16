@@ -179,7 +179,39 @@ class FieldTest(TestCase):
         with self.assertRaises(AttributeError):
             self.field.get_line(3)
 
+        with self.assertRaises(AttributeError):
+            self.field.get_line('2')
+
         print 'Get Line - True'
+
+    def test14_set_size(self):
+        with self.assertRaises(AttributeError):
+            self.field.set_size('2')
+
+        with self.assertRaises(AttributeError):
+            self.field.set_size(-2)
+
+        with self.assertRaises(AttributeError):
+            self.field.set_size(30)
+
+        print 'Set Size - True'
+
+    def test15_fill_random_cell(self):
+        self.field.set_size(2)
+
+        self.field.cells = [[2, 2], [2, 2]]
+        self.assertTrue(self.field.fill_random_cell(1) == 0, 'Fill random cell work is not valid.')
+
+        self.field.cells = [[0, 0], [2, 2]]
+        self.assertTrue(self.field.fill_random_cell(1) == 1, 'Fill random cell work is not valid.')
+
+        self.field.cells = [[0, 0], [2, 2]]
+        self.assertTrue(self.field.fill_random_cell(2) == 2, 'Fill random cell work is not valid.')
+
+        self.field.cells = [[0, 2], [2, 2]]
+        self.assertTrue(self.field.fill_random_cell(2) == 1, 'Fill random cell work is not valid.')
+
+        print 'Fill Random Cell - True'
 
 
 if __name__ == '__main__':
