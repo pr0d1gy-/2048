@@ -1,9 +1,9 @@
 import os
-import sys
 import keypress
 import thread
 from field import Field
-
+import sqlite3
+import json
 
 class Game(object):
     path = os.path.dirname(os.path.abspath(__file__))
@@ -50,18 +50,74 @@ class Game(object):
                         if not self.field.not_moved:
                             self.field.fill_random_cell(self.field.get_size() / 2)
                             self.moves += 1
-                    elif key_code == 27:
+                    elif key_code == 113:
                         self.end = 1
                     elif key_code == 115:
-                        self.save()
+                        self.save_db()
                     elif key_code == 108:
-                        self.load()
+                        self.load_db()
+                    elif key_code == 110:
+                        self.new_game()
+                    else:
+                        print key_code
 
                     self.print_game()
-            except:
-                self.message = sys.exc_info()[1]
+
+            except Exception, e:
+                self.message = e.message
 
         print 'Game is over. You exited.'
+
+    def save_db(self):
+        print 'Saving...'
+        try:
+            db = sqlite3.connect('game.db')
+            db.execute('''CREATE TABLE IF NOT EXISTS saves (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        size INT NOT NULL,
+                        score INT NOT NULL,
+                        moves INT NOT NULL,
+                        field VARCHAR(1000) NOT NULL
+                        )''')
+
+            db.execute('''INSERT INTO saves (size, score, moves, field) VALUES (%d, %d, %d, "%s")''' % (
+                self.field.get_size(),
+                self.score,
+                self.moves,
+                json.dumps(self.field.cells)
+            ))
+
+            db.commit()
+
+            self.message = 'Saved!'
+
+        except Exception, e:
+            self.message = e.message
+        finally:
+            if db:
+                db.close()
+
+    def load_db(self):
+        print 'Loading..'
+        try:
+            db = sqlite3.connect('game.db')
+            result = db.execute('''SELECT * FROM saves ORDER BY id DESC LIMIT 1''').fetchone()
+
+            self.field.clear_cells()
+            self.field.set_size(int(result[1]))
+            self.field.create_empty_field()
+            self.score = int(result[2])
+            self.moves = int(result[3])
+
+            self.field.cells = json.loads(result[4])
+
+            self.message = 'Loaded.'
+
+        except Exception, e:
+            self.message = e.message
+        finally:
+            if db:
+                db.close()
 
     def save(self):
         print 'saving...'
@@ -79,8 +135,8 @@ class Game(object):
 
             f.write(raw)
             self.message = 'Saved!'
-        except:
-            self.message = sys.exc_info()[1]
+        except Exception, e:
+            self.message = e.message
         finally:
             f.close()
 
@@ -104,10 +160,16 @@ class Game(object):
                 self.field.set_line(i - 3, [int(j) for j in lines[i].replace('\n', '').split(',')])
 
             self.message = 'Loaded.'
-        except:
-            self.message = sys.exc_info()[1]
+        except Exception, e:
+            self.message = e.message
         finally:
             f.close()
+
+    def new_game(self):
+        self.field.create_empty_field()
+        self.field.fill_random_cell(self.field.get_size() / 2)
+        self.score = 0
+        self.moves = 0
 
     def print_message(self):
         if self.message:
@@ -135,9 +197,10 @@ class Game(object):
     def print_rules(self):
         self.print_sep()
         print 'Move - ARROWS' \
-            + '\nExit - ESC' \
+            + '\nExit - Q' \
             + '\nSave - S' \
-            + '\nLoad - L'
+            + '\nLoad - L' \
+            + '\nNew - N'
 
     def print_sep(self):
         print '-' * (self.field.get_size() * 7)
@@ -174,5 +237,5 @@ try:
 
     game = Game()
 
-except:
-    print sys.exc_info()[1]
+except Exception, e:
+    print e.message
